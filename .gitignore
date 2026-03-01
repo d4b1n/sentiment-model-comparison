@@ -6,3 +6,5 @@ outputs/
 results/figures/
 data/
 .ipynb_checkpoints/
+run.log
+*.log
