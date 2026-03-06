@@ -1,248 +1,280 @@
-# Sentiment Model Comparison (IMDb)
+# Sentiment Analysis Web Service (IMDb)
 
-A sentiment analysis project that fine-tunes a Transformer model on the IMDb dataset and deploys it as a simple web service using FastAPI.
+A sentiment analysis project that fine-tunes a Transformer model on the IMDb dataset and deploys it as a simple web service using **FastAPI** and a lightweight **web interface**.
 
-## 1. Project Goal | 프로젝트 목표
-
-This project fine-tunes a pre-trained Transformer model on the IMDb dataset for binary sentiment classification.
-
-이 프로젝트는 IMDb 영화 리뷰 데이터를 활용하여 사전학습된 Transformer 모델을 fine-tuning 하고,  
-하이퍼파라미터 변화에 따른 성능 변화를 분석하는 것을 목표로 합니다.
-
-### 핵심 목표
-
-- Baseline 모델 구축
-- Epoch 변화에 따른 성능 분석
-- 데이터 양 변화에 따른 영향 분석
-- 실험 기반 비교 및 해석
+IMDb 영화 리뷰 데이터를 활용하여 Transformer 기반 감정 분석 모델을 fine-tuning하고,  
+FastAPI와 웹 인터페이스를 통해 실제 서비스 형태로 배포하는 프로젝트입니다.
 
 ---
 
-## 2. Dataset | 데이터셋
+# 1. Project Goal | 프로젝트 목표
 
-- **Dataset**: IMDb movie reviews  
-- **Source**: Hugging Face `datasets`  
-- **Task**: Binary classification (positive / negative)  
-- **Property**: Balanced dataset  
+This project aims to build a sentiment classification model using a pre-trained Transformer and analyze how training configurations affect model performance.
 
-IMDb 데이터는 긍정/부정이 균형 잡힌 이진 분류 데이터입니다.
+이 프로젝트의 목표는 다음과 같습니다.
+
+### Goals
+
+- Transformer 기반 감정 분석 모델 구축
+- 실험을 통해 하이퍼파라미터 영향 분석
+- 모델 추론 API 구축
+- 간단한 웹 인터페이스를 통한 서비스 데모 구현
 
 ---
 
-## 3. Model | 사용 모델
+# 2. Dataset | 데이터셋
+
+**Dataset:** IMDb Movie Reviews  
+**Source:** Hugging Face `datasets`
+
+Task:
+
+
+Binary Sentiment Classification
+Positive / Negative
+
+
+특징:
+
+- 약 **50,000개의 영화 리뷰 데이터**
+- 긍정 / 부정이 **균형 잡힌 데이터셋**
+
+---
+
+# 3. Model | 사용 모델
 
 ### distilbert-base-uncased
 
-**선택 이유:**
+선택 이유:
 
-- Lightweight Transformer (BERT 대비 가벼움)
+- BERT보다 **가벼운 Transformer 모델**
 - CPU 환경에서도 빠른 학습 가능
-- 성능 대비 효율 우수
+- NLP classification task에서 높은 효율
 
 ---
 
-## 4. Experiments | 실험 설계
+# 4. Experiments | 실험 설계
 
-| Model       | Train Samples | Epochs | Accuracy | F1     |
-|------------|--------------|--------|----------|--------|
-| distilbert | 2000         | 1      | 0.851    | 0.848  |
-| distilbert | 2000         | 3      | 0.877    | 0.877  |
-| distilbert | 5000         | 1      | 0.881    | 0.879  |
+| Model | Train Samples | Epochs | Accuracy | F1 |
+|------|---------------|-------|--------|------|
+| distilbert | 2000 | 1 | 0.851 | 0.848 |
+| distilbert | 2000 | 3 | 0.877 | 0.877 |
+| distilbert | 5000 | 1 | 0.881 | 0.879 |
 
 ---
 
-## 5. Analysis | 결과 분석
+# 5. Analysis | 결과 분석
 
 ### Epoch 증가 실험
 
-- Epoch 1 → 3 증가 시 성능 상승 (0.851 → 0.877)
-- 동일 데이터 반복 학습이 일반화 성능 향상에 기여
-- 단, Epoch를 과도하게 증가시키면 **Overfitting** 발생 가능
+Epoch 1 → 3 증가 시 성능 상승
+
+
+Accuracy
+0.851 → 0.877
+
+
+동일 데이터 반복 학습이 모델 성능 향상에 기여.
+
+단, Epoch를 과도하게 증가시키면 **Overfitting 위험** 존재.
+
+---
 
 ### 데이터 크기 실험
 
-- 학습 데이터 증가 시 성능 향상 여부 분석
-- 데이터 양과 모델 성능의 상관관계 확인 예정
+학습 데이터 증가 시 성능 향상 확인.
+
+
+Train Samples
+2000 → 5000
+
+
+더 많은 데이터가 모델 일반화 성능에 긍정적 영향을 줄 가능성 확인.
 
 ---
 
-## 6. Training Details | 학습 설정
+# 6. Training Details | 학습 설정
 
-- **Optimizer**: AdamW  
-- **Learning Rate**: 2e-5  
-- **Batch Size**: 16  
-- **Max Length**: 256  
-- **Evaluation Metrics**: Accuracy, F1 Score  
+Optimizer
+
+
+AdamW
+
+
+Learning Rate
+
+
+2e-5
+
+
+Batch Size
+
+
+16
+
+
+Max Length
+
+
+256
+
+
+Evaluation Metrics
+
+
+Accuracy
+F1 Score
+
 
 ---
 
+# 7. Web MVP Demo | 웹 데모
 
-## 7. How to Run | 실행 방법
-
-### 1. Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Train Baseline Model
-
-```bash
-python src/train.py
-```
-
-### 3. Change Experiment Settings (Environment Variables)
-
-#### Change Epoch
-
-```bash
-$env:EPOCHS="3"
-python src/train.py
-```
-
-#### Change Training Data Size
-
-```bash
-$env:MAX_TRAIN_SAMPLES="5000"
-python src/train.py
-```
-
----
-
-## 8. Future Work | 향후 계획
-
-### Planned Improvements
-
-1. **Inference Script 추가**
-   - `predict.py` 구현
-   - 단일 문장 입력 → 감정 예측 출력
-
-2. **REST API 구축**
-   - FastAPI 기반 서버 구현
-   - `/predict` 엔드포인트 설계
-
-3. **Frontend 연동**
-   - Simple HTML + JavaScript
-   - 사용자 입력 → API 호출 → 결과 표시
-
-4. **모델 비교 실험**
-   - BERT vs DistilBERT 성능 비교
-   - Accuracy / F1 / Training Time 비교 분석
-
-5. **Training Efficiency 분석**
-   - Training Time vs Performance 관계 분석
-   - 효율성 중심 모델 선택 기준 도출
-
----
-
-## 9. Key Takeaways | 프로젝트 핵심 포인트
-
-### Technical Insights
-
-- 사전학습 모델을 활용한 **Fine-tuning 실험 설계 수행**
-- 통제변수 기반의 **Controlled Variable Experiment 진행**
-- Epoch와 데이터 크기 변화에 따른 **성능 영향 분석**
-- 실험 결과를 `metrics.csv`로 기록하여 **재현성 확보**
-
-### Experimental Findings
-
-- Epoch 증가 시 성능 향상 경향 확인
-- 데이터 규모 확대 시 추가 성능 개선 가능성 존재
-- 과적합 방지를 위한 적절한 학습 전략 필요성 인지
-
----
-
-## 10. Web MVP Demo | 웹 데모
-
-To demonstrate the trained sentiment model, a simple web MVP was implemented using **FastAPI + HTML/CSS/JavaScript**.
-
-학습된 감정분석 모델을 실제 서비스 형태로 확인하기 위해  
-FastAPI 기반 API와 간단한 웹 인터페이스를 구현했습니다.
-
-### Architecture
-
-
-Browser (Frontend)
-↓
-HTML / CSS / JavaScript
-↓ fetch request
-FastAPI Backend (/predict)
-↓
-Fine-tuned Transformer Model (DistilBERT)
-↓
-Prediction Result + Confidence Score
-
+학습된 모델을 실제 서비스처럼 사용하기 위해  
+FastAPI 기반 추론 API와 간단한 웹 인터페이스를 구현했습니다.
 
 ### Features
 
-- Text input for sentiment prediction
-- Positive / Negative badge visualization
-- Confidence score progress bar
-- FastAPI inference API
-- Lightweight frontend MVP
+- 텍스트 입력 기반 감정 분석
+- Positive / Negative 뱃지 표시
+- Confidence Score Progress Bar
+- FastAPI 기반 REST API
+- HTML / CSS / JavaScript 웹 인터페이스
 
-### Example UI
+---
 
-The web interface allows users to enter a sentence and receive sentiment predictions.
+### Demo Screenshot
 
-Example:
 
-Input:
+images/demo.png
+
+
+웹 인터페이스에서 문장을 입력하면 감정 분석 결과가 표시됩니다.
+
+Example
+
+Input
+
 
 I love this movie
 
 
-Output:
+Output
 
 
-Label: POSITIVE
+POSITIVE
 Confidence: 79.5%
 
 
-The confidence score is visualized using a progress bar for better interpretability.
+---
+
+# 8. System Architecture
+
+
+User (Browser)
+↓
+Frontend (HTML / CSS / JS)
+↓
+Fetch API
+↓
+FastAPI Backend
+↓
+Transformer Model (DistilBERT)
+↓
+Prediction Result
+
+
+이 구조는 실제 AI 서비스의 **end-to-end pipeline**을 단순화한 형태입니다.
 
 ---
 
-## 11. Running the Web Demo | 웹 실행 방법
+# 9. Project Structure
 
-### 1. Start Backend Server
+
+sentiment-model-comparison
+│
+├── backend
+│ └── app.py
+│
+├── frontend
+│ └── index.html
+│
+├── src
+│ ├── train.py
+│ ├── predict.py
+│
+├── results
+│ └── metrics.csv
+│
+├── README.md
+└── requirements.txt
+
+
+---
+
+# 10. How to Run | 실행 방법
+
+### Install dependencies
+
+
+pip install -r requirements.txt
+
+
+---
+
+### Train Model
+
+
+python src/train.py
+
+
+---
+
+### Run Backend Server
 
 
 cd backend
 uvicorn app:app --reload --port 8000
 
 
-### 2. Start Frontend Server
+---
+
+### Run Frontend
 
 
 cd frontend
 python -m http.server 5500
 
 
-### 3. Open Web Page
+---
+
+### Open Web Page
 
 
 http://127.0.0.1:5500
 
 
-Then enter a sentence and click **Predict** to see the sentiment result.
+---
+
+# 11. Key Takeaways | 프로젝트 핵심 포인트
+
+### Technical
+
+- Transformer 기반 NLP 모델 fine-tuning
+- 실험 설계를 통한 모델 성능 비교
+- FastAPI 기반 추론 서버 구현
+- 웹 인터페이스를 통한 모델 서비스 데모
+
+### Engineering
+
+- AI 모델 → API → Web Interface 연결
+- 실제 서비스와 유사한 **AI deployment pipeline 경험**
 
 ---
 
-## 12. System Overview | 전체 시스템 구성
+# 12. Future Improvements
 
-This project demonstrates the **end-to-end pipeline of an AI service**:
-
-
-Model Training
-↓
-Saved Model (outputs/final_model)
-↓
-FastAPI Inference Server
-↓
-Frontend Web Interface
-↓
-User Interaction
-
-
-This structure simulates a minimal production pipeline for deploying NLP models.
+- BERT vs DistilBERT 성능 비교
+- Training time vs performance 분석
+- React 기반 프론트엔드 업그레이드
+- Cloud 배포 (AWS / Docker)
