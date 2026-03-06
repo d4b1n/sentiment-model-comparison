@@ -153,6 +153,7 @@ Transformer Model (DistilBERT)
       │
       ▼
 Prediction Result
+```
 
 이 구조는 실제 AI 서비스의 **end-to-end pipeline**을 단순화한 형태입니다.
 
@@ -178,6 +179,7 @@ sentiment-model-comparison
 │
 ├── README.md
 └── requirements.txt
+```
 ---
 
 # 10. How to Run | 실행 방법
