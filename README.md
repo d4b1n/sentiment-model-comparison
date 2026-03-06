@@ -95,36 +95,15 @@ Train Samples
 
 # 6. Training Details | 학습 설정
 
-Optimizer
+### Training Details
 
-
-AdamW
-
-
-Learning Rate
-
-
-2e-5
-
-
-Batch Size
-
-
-16
-
-
-Max Length
-
-
-256
-
-
-Evaluation Metrics
-
-
-Accuracy
-F1 Score
-
+| Setting | Value |
+|------|------|
+| Optimizer | AdamW |
+| Learning Rate | 2e-5 |
+| Batch Size | 16 |
+| Max Length | 256 |
+| Metrics | Accuracy, F1 |
 
 ---
 
@@ -143,12 +122,13 @@ FastAPI 기반 추론 API와 간단한 웹 인터페이스를 구현했습니다
 
 웹 인터페이스에서 문장을 입력하면 감정 분석 결과가 표시됩니다.
 
+# Demo
 Example
 
-Input
+## Input
 I love this movie
 
-Output
+## Output
 POSITIVE
 Confidence: 79.5%
 
@@ -156,6 +136,7 @@ Confidence: 79.5%
 
 # 8. System Architecture
 
+```text
 User (Browser)
       │
       ▼
@@ -179,19 +160,20 @@ Prediction Result
 
 # 9. Project Structure
 
+```text
 sentiment-model-comparison
 │
-├── backend
+├── backend/
 │   └── app.py
 │
-├── frontend
+├── frontend/
 │   └── index.html
 │
-├── src
+├── src/
 │   ├── train.py
 │   └── predict.py
 │
-├── results
+├── results/
 │   └── metrics.csv
 │
 ├── README.md
