@@ -63,6 +63,12 @@ def main():
     trainer.train()
     metrics = trainer.evaluate()
 
+    # 모델 저장
+    trainer.save_model("outputs/final_model")
+    tokenizer.save_pretrained("outputs/final_model")
+
+    print("Model saved to outputs/final_model")
+
     os.makedirs("results", exist_ok=True)
     row = {
         "model": model_name,

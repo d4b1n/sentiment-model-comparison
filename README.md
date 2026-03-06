@@ -1,5 +1,7 @@
 # Sentiment Model Comparison (IMDb)
 
+A sentiment analysis project that fine-tunes a Transformer model on the IMDb dataset and deploys it as a simple web service using FastAPI.
+
 ## 1. Project Goal | 프로젝트 목표
 
 This project fine-tunes a pre-trained Transformer model on the IMDb dataset for binary sentiment classification.
@@ -147,3 +149,100 @@ python src/train.py
 - Epoch 증가 시 성능 향상 경향 확인
 - 데이터 규모 확대 시 추가 성능 개선 가능성 존재
 - 과적합 방지를 위한 적절한 학습 전략 필요성 인지
+
+---
+
+## 10. Web MVP Demo | 웹 데모
+
+To demonstrate the trained sentiment model, a simple web MVP was implemented using **FastAPI + HTML/CSS/JavaScript**.
+
+학습된 감정분석 모델을 실제 서비스 형태로 확인하기 위해  
+FastAPI 기반 API와 간단한 웹 인터페이스를 구현했습니다.
+
+### Architecture
+
+
+Browser (Frontend)
+↓
+HTML / CSS / JavaScript
+↓ fetch request
+FastAPI Backend (/predict)
+↓
+Fine-tuned Transformer Model (DistilBERT)
+↓
+Prediction Result + Confidence Score
+
+
+### Features
+
+- Text input for sentiment prediction
+- Positive / Negative badge visualization
+- Confidence score progress bar
+- FastAPI inference API
+- Lightweight frontend MVP
+
+### Example UI
+
+The web interface allows users to enter a sentence and receive sentiment predictions.
+
+Example:
+
+Input:
+
+I love this movie
+
+
+Output:
+
+
+Label: POSITIVE
+Confidence: 79.5%
+
+
+The confidence score is visualized using a progress bar for better interpretability.
+
+---
+
+## 11. Running the Web Demo | 웹 실행 방법
+
+### 1. Start Backend Server
+
+
+cd backend
+uvicorn app:app --reload --port 8000
+
+
+### 2. Start Frontend Server
+
+
+cd frontend
+python -m http.server 5500
+
+
+### 3. Open Web Page
+
+
+http://127.0.0.1:5500
+
+
+Then enter a sentence and click **Predict** to see the sentiment result.
+
+---
+
+## 12. System Overview | 전체 시스템 구성
+
+This project demonstrates the **end-to-end pipeline of an AI service**:
+
+
+Model Training
+↓
+Saved Model (outputs/final_model)
+↓
+FastAPI Inference Server
+↓
+Frontend Web Interface
+↓
+User Interaction
+
+
+This structure simulates a minimal production pipeline for deploying NLP models.

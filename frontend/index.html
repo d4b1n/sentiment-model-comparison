@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sentiment MVP</title>
+
+  <!-- 폰트: 문장 입력은 나중에 CSS에서 따로 지정 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #fff7fb;                 /* 아주 연한 핑크 배경 */
+      --card: #ffffff;
+      --text: #2b2b2b;
+      --muted: #6b6b6b;
+
+      --pink: #ff7fb2;               /* 헤더 포인트 핑크 */
+      --pink-soft: #ffd1e2;          /* 파스텔 핑크 */
+      --pink-soft-2: #ffe6f0;
+
+      --btn: #ffb3cf;                /* 파스텔 버튼 */
+      --btn-hover: #ff9cc3;
+
+      --pos: #a9d7ff;                /* 파스텔 파랑 */
+      --neg: #ffb2b2;                /* 파스텔 빨강 */
+
+      --border: #f1d6e2;
+      --shadow: 0 10px 30px rgba(255, 127, 178, 0.15);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Arial;
+      background: radial-gradient(1200px 600px at 20% 0%, #ffe6f1 0%, transparent 60%),
+                  radial-gradient(1200px 600px at 80% 20%, #e9f4ff 0%, transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 48px 16px;
+    }
+
+    .wrap{
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+     h1{
+      font-size: 44px;
+      color: #ffb6c1;
+      font-weight: 900;
+      letter-spacing: -1px;
+      text-shadow: 0 3px 8px rgba(255, 127, 178, 0.25);
+    }
+
+    .sub{
+     margin: 8px 0 24px;
+     text-align: left;      
+     color: var(--muted);
+     font-size: 15px;
+   }
+
+    label{
+      display:block;
+      font-weight: 600;
+      margin: 10px 0 8px;
+      color: #4a4a4a;
+    }
+
+    textarea{
+      width: 100%;
+      min-height: 150px;
+      padding: 14px 14px;
+      border-radius: 14px;
+      border: 1px solid #f2cfe0;
+      background: linear-gradient(180deg, #fff, #fff7fb);
+      outline: none;
+      font-size: 16px;
+
+      font-family: "Gowun Dodum", Inter, system-ui;
+
+      box-shadow: 0 6px 18px rgba(255, 179, 207, 0.18);
+      transition: transform 0.08s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      resize: vertical;
+    }
+
+    textarea:focus{
+      border-color: var(--pink);
+      box-shadow: 0 10px 25px rgba(255, 127, 178, 0.22);
+      transform: translateY(-1px);
+    }
+
+    .row{
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+
+    button{
+      border: 0;
+      padding: 12px 16px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 14px;
+      cursor: pointer;
+      color: #4a2b3b;
+      color: white;
+      background: linear-gradient(180deg, var(--btn), var(--pink-soft));
+      box-shadow: 0 10px 25px rgba(255, 156, 195, 0.25);
+      transition: transform 0.08s ease, filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover{
+      filter: brightness(1.02);
+      box-shadow: 0 12px 28px rgba(255, 156, 195, 0.30);
+    }
+
+    button:active{
+      transform: scale(0.98) translateY(1px);
+    }
+
+    button:disabled{
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .status{
+      color: var(--muted);
+      font-size: 14px;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .spinner{
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 2px solid #ffd1e2;
+      border-top-color: var(--pink);
+      animation: spin 0.8s linear infinite;
+      display:none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result.show{
+      animation: fadeUp 220ms ease-out;
+    } 
+
+    .card.pos-bg{
+      background: linear-gradient(180deg, #ffffff 0%, rgba(169, 215, 255, 0.22) 100%);
+    }
+
+    .card.neg-bg{
+      background: linear-gradient(180deg, #ffffff 0%, rgba(255, 178, 178, 0.22) 100%);
+    }
+
+    .result{
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid #f2cfe0;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ffffff, #fff7fb);
+      display: none;
+    }
+
+    .resultTop{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 13px;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .badge.pos{ background: rgba(169, 215, 255, 0.55); color: #0b3a66; }
+    .badge.neg{ background: rgba(255, 178, 178, 0.60); color: #6b0b0b; }
+
+    .kv{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: #3d3d3d;
+      font-size: 14px;
+    }
+    .kv b{ color: #222; }
+
+    .hint{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .confWrap{
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.confBar{
+  flex: 1;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255, 179, 207, 0.35); /* 기본 파스텔 배경 */
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.confFill{
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  transition: width 420ms ease; /* 부드럽게 차오름 */
+}
+
+/* label에 따라 색상 */
+.confFill.posFill{ background: rgba(169, 215, 255, 0.95); }  /* 파스텔 파랑 */
+.confFill.negFill{ background: rgba(255, 178, 178, 0.95); }  /* 파스텔 빨강 */
+
+.confPct{
+  min-width: 52px;
+  text-align: right;
+  font-weight: 800;
+  color: #333;
+  font-size: 13px;
+}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card" id="card">
+      <h1>Sentiment Analysis MVP</h1>
+      <p class="sub">문장을 넣고 Predict를 누르면 FastAPI(/predict)를 호출해 결과를 보여줘!</p>
+
+      <label for="text">문장 입력</label>
+      <textarea id="text" placeholder='예: I love this movie'></textarea>
+
+      <div class="row">
+        <button id="btn">Predict</button>
+        <div class="status">
+          <div class="spinner" id="spinner"></div>
+          <span id="status"></span>
+        </div>
+      </div>
+
+      <div id="out" class="result"></div>
+      <div class="hint">Tip: 결과가 안 뜨면 FastAPI 서버(8000)와 CORS 설정을 먼저 확인해줘.</div>
+    </div>
+  </div>
+  
+  <script>
+    const $card = document.getElementById("card");
+    const API_URL = "http://127.0.0.1:8000/predict";
+
+    const $text = document.getElementById("text");
+    const $btn = document.getElementById("btn");
+    const $out = document.getElementById("out");
+    const $status = document.getElementById("status");
+    const $spinner = document.getElementById("spinner");
+
+    function badgeClass(label) {
+      const up = String(label || "").toUpperCase();
+      if (up.includes("POS")) return "pos";
+      if (up.includes("NEG")) return "neg";
+      return "pos";
+    }
+
+    function fmtConf(x) {
+      const n = Number(x);
+      if (Number.isFinite(n)) return n.toFixed(4);
+      return String(x);
+    }
+
+    function toPct(conf) {
+      const n = Number(conf);
+      if (!Number.isFinite(n)) return null;
+
+      // conf가 0~1이면 %로 변환, 이미 0~100이면 그대로
+      const pct = n <= 1 ? n * 100 : n;
+      return Math.max(0, Math.min(100, pct));
+    }
+
+    $btn.addEventListener("click", async () => {
+      const text = $text.value.trim();
+      if (!text) {
+        alert("문장을 입력해줘!");
+        return;
+      }
+
+      $btn.disabled = true;
+      $status.textContent = "예측 중...";
+      $spinner.style.display = "inline-block";
+      $out.style.display = "none";
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text }),
+        });
+
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(`HTTP ${res.status} - ${errText}`);
+        }
+
+        const data = await res.json();
+        const label = data.label ?? "UNKNOWN";
+        const conf = fmtConf(data.confidence);
+
+        const cls = badgeClass(label);
+
+        // 카드 배경 상태 초기화 후 적용
+        $card.classList.remove("pos-bg", "neg-bg");
+        $card.classList.add(cls === "pos" ? "pos-bg" : "neg-bg");
+
+        // 결과 부드럽게 등장
+        $out.classList.remove("show");
+        void $out.offsetWidth; // reflow로 애니메이션 다시 실행
+        $out.classList.add("show");
+
+        $out.style.display = "block";
+        const pct = Number(conf) <= 1 ? Number(conf) * 100 : Number(conf);
+
+        $out.style.display = "block";
+        $out.innerHTML = `
+  <div class="resultTop">
+    <div class="badge ${cls}">
+      ${cls === "pos" ? "POSITIVE" : "NEGATIVE"}
+    </div>
+    <div class="kv">
+      <div><b>Label:</b> ${label}</div>
+    </div>
+  </div>
+
+  <div class="confWrap">
+    <div class="confBar">
+      <div id="confFill" class="confFill ${cls === "pos" ? "posFill" : "negFill"}"></div>
+    </div>
+    <div class="confPct">${pct.toFixed(1)}%</div>
+  </div>
+`;
+
+const fill = document.getElementById("confFill");
+requestAnimationFrame(() => {
+  fill.style.width = pct + "%";
+});
+      } catch (e) {
+        alert("에러: " + e.message);
+      } finally {
+        $btn.disabled = false;
+        $spinner.style.display = "none";
+        $status.textContent = "";
+      }
+    });
+  </script>
+</body>
+</html>
