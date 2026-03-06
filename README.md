@@ -141,48 +141,37 @@ FastAPI 기반 추론 API와 간단한 웹 인터페이스를 구현했습니다
 - FastAPI 기반 REST API
 - HTML / CSS / JavaScript 웹 인터페이스
 
----
-
-### Demo Screenshot
-
-
-images/demo.png
-
-
 웹 인터페이스에서 문장을 입력하면 감정 분석 결과가 표시됩니다.
 
 Example
 
 Input
-
-
 I love this movie
 
-
 Output
-
-
 POSITIVE
 Confidence: 79.5%
-
 
 ---
 
 # 8. System Architecture
 
-
 User (Browser)
-↓
+      │
+      ▼
 Frontend (HTML / CSS / JS)
-↓
+      │
+      ▼
 Fetch API
-↓
+      │
+      ▼
 FastAPI Backend
-↓
+      │
+      ▼
 Transformer Model (DistilBERT)
-↓
+      │
+      ▼
 Prediction Result
-
 
 이 구조는 실제 AI 서비스의 **end-to-end pipeline**을 단순화한 형태입니다.
 
@@ -190,26 +179,23 @@ Prediction Result
 
 # 9. Project Structure
 
-
 sentiment-model-comparison
 │
 ├── backend
-│ └── app.py
+│   └── app.py
 │
 ├── frontend
-│ └── index.html
+│   └── index.html
 │
 ├── src
-│ ├── train.py
-│ ├── predict.py
+│   ├── train.py
+│   └── predict.py
 │
 ├── results
-│ └── metrics.csv
+│   └── metrics.csv
 │
 ├── README.md
 └── requirements.txt
-
-
 ---
 
 # 10. How to Run | 실행 방법
