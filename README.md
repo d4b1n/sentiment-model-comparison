@@ -122,15 +122,25 @@ FastAPI 기반 추론 API와 간단한 웹 인터페이스를 구현했습니다
 
 웹 인터페이스에서 문장을 입력하면 감정 분석 결과가 표시됩니다.
 
-# Demo
-Example
+# Demo1
+https://github.com/user-attachments/assets/09d48c38-6000-4150-b356-3cc87659a867
 
 ## Input
-I love this movie
+I absolutely loved this movie. The acting was fantastic.
 
 ## Output
 POSITIVE
-Confidence: 79.5%
+Confidence: 84.5%
+
+# Demo2
+https://github.com/user-attachments/assets/765d2919-f065-4703-869d-26e97c520c2b
+
+## Input
+I was really disappointed with this movie. The story was boring.
+
+## Output
+NEGATIVE
+Confidence: 84.3%
 
 ---
 
@@ -235,7 +245,25 @@ python -m http.server 5500
 
 # 12. Future Improvements
 
-- BERT vs DistilBERT 성능 비교
-- Training time vs performance 분석
+### Model & Performance
+
+- BERT vs DistilBERT 성능 및 추론 속도 비교
+- Training time vs performance trade-off 분석
+- Hyperparameter tuning을 통한 성능 개선
+- 다양한 영화 리뷰 데이터셋으로 일반화 성능 검증
+
+### Product Features
+
+- 리뷰 감정 점수 시각화 (긍정/부정 확률 그래프)
+- 감정 분석 결과 히스토리 저장 기능
+- 여러 문장을 한 번에 분석하는 Batch Prediction 기능
+- 리뷰 키워드 하이라이팅 (긍정/부정에 영향을 준 단어 표시)
+- 사용자 리뷰 통계 대시보드 제공
+
+### Engineering
+
 - React 기반 프론트엔드 업그레이드
-- Cloud 배포 (AWS / Docker)
+- Docker 기반 컨테이너화
+- AWS 클라우드 배포
+- CI/CD 파이프라인 구축
+- Redis 캐싱을 통한 추론 속도 개선
